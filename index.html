@@ -106,9 +106,9 @@
       .hero .yr   { font-size:120px !important; }
       .hero .sub  { font-size:18px !important; letter-spacing:6px !important; }
 
-      /* Quick facts: one row of four across the top */
+      /* Quick facts: two rows of three across the top */
       .facts {
-        grid-template-columns:repeat(4, 1fr);
+        grid-template-columns:repeat(3, 1fr);
         gap:20px;
         max-width:1200px;
         margin:0 auto;
@@ -154,7 +154,7 @@
        Row 3: Entry Fee (full width)
        ========================================================= */
     @media (orientation: landscape) and (max-height: 600px) {
-      .facts { grid-template-columns:repeat(4, 1fr); }
+      .facts { grid-template-columns:repeat(3, 1fr); }
 
       .grid {
         display:grid;
@@ -208,6 +208,18 @@
         <div style="margin-top:6px; font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#0B6E8F;">Draft Type</div>
         <div style="margin-top:2px; font-family:'Lilita One', sans-serif; font-size:19px; color:#0B1E3A; line-height:1.15;">Snake</div>
         <div style="margin-top:2px; font-size:12px; font-weight:700; color:#5b6b7d;">Order via obstacle challenge</div>
+      </div>
+      <div style="background:#FFFDF5; border:3px solid #0B1E3A; border-radius:18px; padding:14px 12px; box-shadow:0 5px 0 #0B1E3A;">
+        <div style="font-size:24px; line-height:1;">💵</div>
+        <div style="margin-top:6px; font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#0B6E8F;">Waiver Type</div>
+        <div style="margin-top:2px; font-family:'Lilita One', sans-serif; font-size:19px; color:#0B1E3A; line-height:1.15;">FAAB</div>
+        <div style="margin-top:2px; font-size:12px; font-weight:700; color:#5b6b7d;">$100 budget</div>
+      </div>
+      <div style="background:#FFFDF5; border:3px solid #0B1E3A; border-radius:18px; padding:14px 12px; box-shadow:0 5px 0 #0B1E3A;">
+        <div style="font-size:24px; line-height:1;">🏳️</div>
+        <div style="margin-top:6px; font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#0B6E8F;">Trades</div>
+        <div style="margin-top:2px; font-family:'Lilita One', sans-serif; font-size:19px; color:#0B1E3A; line-height:1.15;">Vetoes</div>
+        <div style="margin-top:2px; font-size:12px; font-weight:700; color:#5b6b7d;">6/10 votes to veto</div>
       </div>
     </div>
 

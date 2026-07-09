@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Shark Valley Fantasy</title>
 
   <!-- Favicons -->
@@ -29,6 +29,7 @@
 
   <style>
     html, body { margin:0; padding:0; }
+    html { background:#0B1E3A; }
     * { box-sizing:border-box; }
     a { color:#FFC53D; text-decoration:none; }
     a:hover { color:#FFD86B; }
@@ -69,9 +70,14 @@
     @media (min-width: 860px), (orientation: landscape) and (min-width: 560px) {
       body {
         /* Gradient covers the whole page, matching mobile: straight
-           top-to-bottom, amber/orange up top fading to deep blue below. */
-        background:linear-gradient(180deg, #FFC53D 0%, #F5A623 12%, #E8542F 24%, #0FA3B1 42%, #0B6E8F 70%, #0B1E3A 100%);
+           top-to-bottom, amber/orange up top fading to deep blue below.
+           Fixed attachment + min 100vw so it fills into the notch/safe
+           areas on phones in landscape instead of leaving white gutters. */
+        background:linear-gradient(180deg, #FFC53D 0%, #F5A623 12%, #E8542F 24%, #0FA3B1 42%, #0B6E8F 70%, #0B1E3A 100%) fixed;
+        background-color:#0B1E3A;
+        min-width:100vw;
         min-height:100vh;
+        min-height:100dvh;
       }
 
       .brochure {

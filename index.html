@@ -142,13 +142,16 @@
     }
 
     /* =========================================================
-       PHONE LANDSCAPE — stacked full-width rows.
-       Landscape but narrower than a desktop (<860px):
+       PHONE / TABLET LANDSCAPE — stacked full-width rows.
+       Landscape, but shorter than a desktop screen (height <=600px
+       catches phones/small tablets held sideways, regardless of how
+       wide the specific model reports). Placed LAST so it overrides
+       the desktop grid above.
        Row 1: Prize Pool (full width)
        Row 2: Draft Day + Last Place Punishment (side by side)
        Row 3: Entry Fee (full width)
        ========================================================= */
-    @media (orientation: landscape) and (min-width: 560px) and (max-width: 859px) {
+    @media (orientation: landscape) and (max-height: 600px) {
       .facts { grid-template-columns:repeat(4, 1fr); }
 
       .grid {
@@ -156,11 +159,12 @@
         grid-template-columns:1fr 1fr;
         grid-auto-rows:auto;
         gap:18px;
+        max-width:none;
       }
-      .grid .card-prizes  { grid-column:1 / span 2; grid-row:1; }
-      .grid .card-draft   { grid-column:1; grid-row:2; }
-      .grid .card-punish  { grid-column:2; grid-row:2; }
-      .grid .card-entry   { grid-column:1 / span 2; grid-row:3; }
+      .grid .card-prizes  { grid-column:1 / span 2 !important; grid-row:1 !important; }
+      .grid .card-draft   { grid-column:1 !important;          grid-row:2 !important; }
+      .grid .card-punish  { grid-column:2 !important;          grid-row:2 !important; }
+      .grid .card-entry   { grid-column:1 / span 2 !important; grid-row:3 !important; }
     }
   </style>
 </head>

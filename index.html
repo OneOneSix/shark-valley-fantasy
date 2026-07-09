@@ -140,6 +140,28 @@
       .hero, .facts { max-width:1320px; }
       .grid { max-width:1440px; }
     }
+
+    /* =========================================================
+       PHONE LANDSCAPE — stacked full-width rows.
+       Landscape but narrower than a desktop (<860px):
+       Row 1: Prize Pool (full width)
+       Row 2: Draft Day + Last Place Punishment (side by side)
+       Row 3: Entry Fee (full width)
+       ========================================================= */
+    @media (orientation: landscape) and (min-width: 560px) and (max-width: 859px) {
+      .facts { grid-template-columns:repeat(4, 1fr); }
+
+      .grid {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        grid-auto-rows:auto;
+        gap:18px;
+      }
+      .grid .card-prizes  { grid-column:1 / span 2; grid-row:1; }
+      .grid .card-draft   { grid-column:1; grid-row:2; }
+      .grid .card-punish  { grid-column:2; grid-row:2; }
+      .grid .card-entry   { grid-column:1 / span 2; grid-row:3; }
+    }
   </style>
 </head>
 <body>

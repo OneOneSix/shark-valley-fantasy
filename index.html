@@ -59,14 +59,18 @@
     .card-prizes, .card-draft, .card-punish, .card-entry { height:100%; }
 
     /* =========================================================
-       DESKTOP (>=860px) — real full-width website layout.
+       DESKTOP / WIDE — real full-width website layout.
+       Triggers when the viewport is wide (>=860px) OR the device
+       is in landscape and at least 560px wide (so phones in
+       landscape get the wide layout instead of the thin column).
        The gradient fills the whole viewport; content spans a
        wide centered container; sections flow into columns.
        ========================================================= */
-    @media (min-width: 860px) {
+    @media (min-width: 860px), (orientation: landscape) and (min-width: 560px) {
       body {
-        /* Gradient now covers the entire page, edge to edge. */
-        background:linear-gradient(160deg, #FFC53D 0%, #F5A623 10%, #E8542F 22%, #0FA3B1 46%, #0B6E8F 72%, #0B1E3A 100%);
+        /* Gradient covers the whole page, matching mobile: straight
+           top-to-bottom, amber/orange up top fading to deep blue below. */
+        background:linear-gradient(180deg, #FFC53D 0%, #F5A623 12%, #E8542F 24%, #0FA3B1 42%, #0B6E8F 70%, #0B1E3A 100%);
         min-height:100vh;
       }
 

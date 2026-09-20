@@ -222,6 +222,8 @@
     .sb-amt { font-family:'Lilita One', sans-serif; font-size:15px; color:#0B1E3A; min-width:44px; text-align:right; }
     .sb-week.open .sb-amt { color:#c3ccd5; }
 
+    .sb-hide { display:none; }
+    .sb-hide .sb-week:first-child, .sb-hide .sb-row:first-child { margin-top:4px; }
     .sb-more {
       display:block; width:100%; margin-top:8px; cursor:pointer;
       font-family:'Nunito', sans-serif; font-weight:900; font-size:12px;
@@ -649,50 +651,45 @@
 
       // --- week by week ---
       elWeeksSub.textContent = played.length + ' of ' + total + ' weeks in the books';
-      var rows = '', hidden = '', upcoming = 0;
-      var upcomingTotal = 0;
-      for (var k = 1; k <= total; k++) { if (!(wmap[k] && wmap[k].winner)) upcomingTotal++; }
-      var collapseAfter = 2, willCollapse = upcomingTotal > 4;
-      for (var i = 1; i <= total; i++) {
+
+      // Visible window = the 3 most recent weeks. Before the season has 3 in
+      // the books, pad forward with upcoming weeks so it still reads as 3 rows.
+      var lastPlayed = 0;
+      for (var k = 1; k <= total; k++) { if (wmap[k] && wmap[k].winner) lastPlayed = k; }
+      var visStart = lastPlayed >= 3 ? lastPlayed - 2 : 1;
+      var visEnd   = lastPlayed >= 3 ? lastPlayed : Math.min(3, total);
+
+      function weekRow(i) {
         var w = wmap[i];
-        var chunk = '';
         if (w && w.winner) {
           var team = teamOf(w.winner, season);
-          chunk =
-            '<div class="sb-week done">' +
-              '<div class="sb-wk">WK ' + i + '</div>' +
-              '<div class="sb-win">' + esc(w.winner) +
-                (team ? '<small>' + esc(team) + '</small>' : '') +
-              '</div>' +
-              (w.points != null ? '<div class="sb-pts">' + esc(pts(w.points)) + ' pts</div>' : '') +
-              '<div class="sb-amt">' + money(prizeOf(w)) + '</div>' +
-            '</div>';
-          rows += chunk;
-        } else {
-          upcoming++;
-          chunk =
-            '<div class="sb-week open">' +
-              '<div class="sb-wk">WK ' + i + '</div>' +
-              '<div class="sb-win">' + (isNow ? 'Up for grabs' : '—') + '</div>' +
-              '<div class="sb-amt">' + money(SVF_WEEKLY_PRIZE) + '</div>' +
-            '</div>';
-          if (willCollapse && upcoming > collapseAfter) { hidden += chunk; } else { rows += chunk; }
+          return '<div class="sb-week done">' +
+                   '<div class="sb-wk">WK ' + i + '</div>' +
+                   '<div class="sb-win">' + esc(w.winner) +
+                     (team ? '<small>' + esc(team) + '</small>' : '') +
+                   '</div>' +
+                   (w.points != null ? '<div class="sb-pts">' + esc(pts(w.points)) + ' pts</div>' : '') +
+                   '<div class="sb-amt">' + money(prizeOf(w)) + '</div>' +
+                 '</div>';
         }
+        return '<div class="sb-week open">' +
+                 '<div class="sb-wk">WK ' + i + '</div>' +
+                 '<div class="sb-win">' + (isNow ? 'Up for grabs' : '\u2014') + '</div>' +
+                 '<div class="sb-amt">' + money(SVF_WEEKLY_PRIZE) + '</div>' +
+               '</div>';
       }
-      if (hidden) {
-        rows += '<div id="sbRest" style="display:none">' + hidden + '</div>' +
-                '<button id="sbMore" class="sb-more">+ ' + (upcomingTotal - collapseAfter) + ' more weeks</button>';
+
+      var wPre = '', wVis = '', wPost = '', wHidden = 0;
+      for (var i = 1; i <= total; i++) {
+        if (i < visStart)    { wPre  += weekRow(i); wHidden++; }
+        else if (i > visEnd) { wPost += weekRow(i); wHidden++; }
+        else                 { wVis  += weekRow(i); }
       }
-      elWeeks.innerHTML = rows;
-      var more = document.getElementById('sbMore');
-      if (more) {
-        more.addEventListener('click', function () {
-          var rest = document.getElementById('sbRest');
-          var open = rest.style.display !== 'none';
-          rest.style.display = open ? 'none' : 'block';
-          more.textContent = open ? ('+ ' + (upcomingTotal - collapseAfter) + ' more weeks') : '− hide remaining weeks';
-        });
-      }
+      elWeeks.innerHTML =
+        (wPre ? '<div class="sb-hide" data-grp="wk">' + wPre + '</div>' : '') +
+        wVis +
+        (wPost ? '<div class="sb-hide" data-grp="wk">' + wPost + '</div>' : '') +
+        (wHidden ? '<button class="sb-more" data-grp="wk">See more</button>' : '');
 
       // --- money leaderboard ---
       var paid = played.reduce(function (sum, w) { return sum + prizeOf(w); }, 0);
@@ -701,25 +698,47 @@
       var max  = table.length ? table[0].cash : 0;
 
       elBoardSub.textContent = isNow ? 'Cash won so far this season' : 'Final ' + year + ' payouts';
-      elBoard.innerHTML = table.map(function (p, idx) {
+
+      function boardRow(p) {
         var pct  = max > 0 ? Math.round((p.cash / max) * 100) : 0;
         var rank = 1 + table.filter(function (o) { return o.cash > p.cash; }).length;
         var lead = p.cash > 0 && p.cash === max;
         return '<div class="sb-row' + (lead ? ' lead' : '') + (p.cash === 0 ? ' zero' : '') + '">' +
                  '<div class="sb-bar" style="width:' + pct + '%"></div>' +
-                 '<div class="sb-rank">' + (p.cash > 0 ? rank : '–') + '</div>' +
+                 '<div class="sb-rank">' + (p.cash > 0 ? rank : '\u2013') + '</div>' +
                  '<div class="sb-nm">' + esc(p.name) +
                    (teamOf(p.name, season) ? '<small>' + esc(teamOf(p.name, season)) + '</small>' : '') +
                  '</div>' +
                  '<div class="sb-cash">' + money(p.cash) +
-                   (p.wins ? ' <span style="font-family:Nunito,sans-serif; font-size:11px; font-weight:800; color:#5b6b7d;">×' + p.wins + '</span>' : '') +
+                   (p.wins ? ' <span style="font-family:Nunito,sans-serif; font-size:11px; font-weight:800; color:#5b6b7d;">\u00d7' + p.wins + '</span>' : '') +
                  '</div>' +
                '</div>';
-      }).join('');
+      }
+
+      // Top 3 stay visible; everyone else sits behind the button.
+      var bRest = table.slice(3);
+      elBoard.innerHTML =
+        table.slice(0, 3).map(boardRow).join('') +
+        (bRest.length ? '<div class="sb-hide" data-grp="bd">' + bRest.map(boardRow).join('') + '</div>' +
+                        '<button class="sb-more" data-grp="bd">See more</button>' : '');
 
       elFoot.innerHTML =
         '<span>Paid out</span><span><b>' + money(paid) + '</b> of ' + money(pot) + '</span>';
       elNote.textContent = season.note || (isNow ? 'High score each week wins ' + money(SVF_WEEKLY_PRIZE) + '.' : '');
+
+      // --- show more / hide toggles (both panels) ---
+      Array.prototype.forEach.call(document.querySelectorAll('.sb-more'), function (btn) {
+        btn.addEventListener('click', function () {
+          var grp  = btn.getAttribute('data-grp');
+          var open = btn.getAttribute('data-open') === '1';
+          Array.prototype.forEach.call(
+            document.querySelectorAll('.sb-hide[data-grp="' + grp + '"]'),
+            function (d) { d.style.display = open ? 'none' : 'block'; }
+          );
+          btn.setAttribute('data-open', open ? '0' : '1');
+          btn.textContent = open ? 'See more' : 'See less';
+        });
+      });
     }
 
     elSeasons.addEventListener('click', function (e) {

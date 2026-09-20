@@ -724,7 +724,9 @@
 
       elFoot.innerHTML =
         '<span>Paid out</span><span><b>' + money(paid) + '</b> of ' + money(pot) + '</span>';
-      elNote.textContent = season.note || (isNow ? 'High score each week wins ' + money(SVF_WEEKLY_PRIZE) + '.' : '');
+      // Only shows if a season defines its own "note". No default blurb —
+      // the $25 rule already lives in the Prize Pool card below.
+      elNote.textContent = season.note || '';
 
       // --- show more / hide toggles (both panels) ---
       Array.prototype.forEach.call(document.querySelectorAll('.sb-more'), function (btn) {

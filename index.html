@@ -168,6 +168,99 @@
       .grid .card-punish  { grid-column:2 !important;          grid-row:2 !important; }
       .grid .card-entry   { grid-column:1 / span 2 !important; grid-row:3 !important; }
     }
+
+    /* =========================================================
+       WEEKLY TOP SCORER SCOREBOARD
+       ========================================================= */
+    .scoreboard { margin:24px 18px 0; }
+    .sb-head { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:14px; }
+    .sb-title { font-family:'Lilita One', sans-serif; font-size:26px; color:#FFFDF5; text-transform:uppercase; letter-spacing:1px; text-align:center; text-shadow:0 3px 0 rgba(11,30,58,0.35); }
+    .sb-seasons { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .sb-yr {
+      font-family:'Lilita One', sans-serif; font-size:15px; letter-spacing:1px;
+      padding:6px 16px; border-radius:999px; border:3px solid #0B1E3A;
+      background:#FFFDF5; color:#0B1E3A; cursor:pointer;
+      box-shadow:0 3px 0 #0B1E3A; transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .sb-yr:hover { transform:translateY(-2px); box-shadow:0 5px 0 #0B1E3A; }
+    .sb-yr.on { background:#FFC53D; }
+
+    /* Spotlight */
+    .sb-spot {
+      background:#0B1E3A; border:3px solid #FFC53D; border-radius:22px;
+      padding:18px 16px; box-shadow:0 6px 0 rgba(0,0,0,0.25);
+      display:flex; align-items:center; gap:14px;
+    }
+    .sb-spot-medal { font-size:42px; line-height:1; animation:floaty 4s ease-in-out infinite; }
+    .sb-spot-main { flex:1; min-width:0; }
+    .sb-spot-label { font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase; color:#7FB6C9; }
+    .sb-spot-name { font-family:'Lilita One', sans-serif; font-size:30px; line-height:1.1; color:#FFC53D; }
+    .sb-spot-sub { margin-top:2px; font-size:13px; font-weight:800; color:#FFFDF5; }
+    .sb-spot-cash {
+      font-family:'Lilita One', sans-serif; font-size:24px; color:#0B1E3A;
+      background:linear-gradient(180deg,#FFC53D,#E8912F); border-radius:14px;
+      padding:10px 14px; white-space:nowrap; box-shadow:0 4px 0 rgba(0,0,0,0.25);
+    }
+
+    /* Two panels */
+    .sb-cols { display:grid; grid-template-columns:1fr; gap:14px; margin-top:14px; }
+    .sb-card { background:#FFFDF5; border:3px solid #0B1E3A; border-radius:22px; padding:16px 14px; box-shadow:0 5px 0 #0B1E3A; }
+    .sb-card-title { font-family:'Lilita One', sans-serif; font-size:20px; color:#E8542F; text-transform:uppercase; text-align:center; }
+    .sb-card-sub { text-align:center; font-size:11.5px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#0B6E8F; margin-top:2px; margin-bottom:12px; }
+
+    /* Weekly winner rows */
+    .sb-week { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; }
+    .sb-week + .sb-week { margin-top:4px; }
+    .sb-week.done { background:#E9F6F8; }
+    .sb-week.open { background:#F2EEE2; }
+    .sb-wk { font-family:'Lilita One', sans-serif; font-size:13px; letter-spacing:.5px; color:#0B6E8F; min-width:58px; }
+    .sb-week.open .sb-wk { color:#9aa7b4; }
+    .sb-win { flex:1; min-width:0; font-weight:900; font-size:14px; color:#0B1E3A; line-height:1.2; }
+    .sb-win small { display:block; font-weight:700; font-size:11px; color:#5b6b7d; }
+    .sb-week.open .sb-win { color:#9aa7b4; font-weight:800; }
+    .sb-pts { font-weight:800; font-size:11.5px; color:#5b6b7d; white-space:nowrap; }
+    .sb-amt { font-family:'Lilita One', sans-serif; font-size:15px; color:#0B1E3A; min-width:44px; text-align:right; }
+    .sb-week.open .sb-amt { color:#c3ccd5; }
+
+    .sb-more {
+      display:block; width:100%; margin-top:8px; cursor:pointer;
+      font-family:'Nunito', sans-serif; font-weight:900; font-size:12px;
+      letter-spacing:1px; text-transform:uppercase; color:#0B6E8F;
+      background:#E9F6F8; border:0; border-radius:12px; padding:10px;
+    }
+    .sb-more:hover { background:#D7EDF2; }
+
+    /* Money leaderboard rows */
+    .sb-row { position:relative; overflow:hidden; display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:12px; }
+    .sb-row + .sb-row { margin-top:4px; }
+    .sb-bar { position:absolute; left:0; top:0; bottom:0; width:0; background:#FFF3DC; border-radius:12px; }
+    .sb-row > .sb-rank, .sb-row > .sb-nm, .sb-row > .sb-cash { position:relative; z-index:1; }
+    .sb-rank { font-family:'Lilita One', sans-serif; font-size:14px; color:#0B6E8F; min-width:24px; }
+    .sb-nm { flex:1; min-width:0; font-weight:900; font-size:14px; color:#0B1E3A; line-height:1.2; }
+    .sb-nm small { display:block; font-weight:700; font-size:11px; color:#5b6b7d; }
+    .sb-cash { font-family:'Lilita One', sans-serif; font-size:17px; color:#0B1E3A; min-width:54px; text-align:right; }
+    .sb-row.zero .sb-nm, .sb-row.zero .sb-cash { color:#9aa7b4; }
+    .sb-row.lead .sb-bar { background:#FFE3A3; }
+    .sb-row.lead .sb-cash { color:#E8542F; }
+    .sb-foot {
+      margin-top:12px; background:#0B1E3A; border-radius:14px; padding:11px 13px;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      color:#FFFDF5; font-weight:800; font-size:12.5px;
+    }
+    .sb-foot b { color:#FFC53D; font-family:'Lilita One', sans-serif; font-size:16px; font-weight:400; }
+    .sb-note { margin-top:10px; text-align:center; font-size:11.5px; font-weight:800; color:#7FB6C9; letter-spacing:.5px; }
+
+    /* Wide layout for the scoreboard */
+    @media (min-width: 860px), (orientation: landscape) and (min-width: 560px) {
+      .scoreboard { max-width:1280px; margin:6px auto 30px; padding:0 20px; }
+      .sb-title { font-size:34px; }
+      .sb-spot { padding:22px 24px; gap:20px; }
+      .sb-spot-medal { font-size:56px; }
+      .sb-spot-name { font-size:40px; }
+      .sb-spot-cash { font-size:30px; padding:12px 20px; }
+      .sb-cols { grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+      .sb-card { padding:20px 18px; }
+    }
   </style>
 </head>
 <body>
@@ -220,6 +313,34 @@
         <div style="margin-top:6px; font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#0B6E8F;">Trades</div>
         <div style="margin-top:2px; font-family:'Lilita One', sans-serif; font-size:19px; color:#0B1E3A; line-height:1.15;">Vetoes</div>
         <div style="margin-top:2px; font-size:12px; font-weight:700; color:#5b6b7d;">6/10 votes to veto</div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         WEEKLY TOP SCORER
+         Everything here is drawn from the SVF_SEASONS data block
+         near the bottom of this file. Don't edit this markup —
+         just add the week to the data and save.
+         ========================================================= -->
+    <div class="scoreboard">
+      <div class="sb-head">
+        <div class="sb-title">🔥 Weekly Top Scorer</div>
+        <div class="sb-seasons" id="sbSeasons"></div>
+      </div>
+      <div class="sb-spot" id="sbSpot"></div>
+      <div class="sb-cols">
+        <div class="sb-card">
+          <div class="sb-card-title">📅 Week by Week</div>
+          <div class="sb-card-sub" id="sbWeeksSub"></div>
+          <div id="sbWeeks"></div>
+        </div>
+        <div class="sb-card">
+          <div class="sb-card-title">💵 Money Leaderboard</div>
+          <div class="sb-card-sub" id="sbBoardSub"></div>
+          <div id="sbBoard"></div>
+          <div class="sb-foot" id="sbFoot"></div>
+          <div class="sb-note" id="sbNote"></div>
+        </div>
       </div>
     </div>
 
@@ -298,6 +419,317 @@
     <div class="footer" style="text-align:center; padding:26px 20px 34px; color:#7FB6C9; font-weight:800; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Shark Valley Fantasy · 2026 Season</div>
 
   </div>
+
+  <!-- =========================================================
+       TOP SCORER DATA  —  THIS IS THE ONLY PART YOU EDIT
+       ========================================================= -->
+  <script>
+  /* ┌──────────────────────────────────────────────────────────┐
+     │  HOW TO UPDATE AFTER EACH WEEK                           │
+     │                                                          │
+     │  1. Find "2026:" in SVF_SEASONS below.                   │
+     │  2. Add one line to its weeks list, e.g.                 │
+     │                                                          │
+     │       { week: 2, winner: 'Adrian', points: 152.7 },      │
+     │                                                          │
+     │     - winner  : must match a name in SVF_ROSTER          │
+     │     - points  : optional, delete it to hide the score    │
+     │     - prize   : optional, only if it wasn't $25          │
+     │  3. Save the file and upload it. That's it — the         │
+     │     leaderboard, totals and the spotlight at the top     │
+     │     all recalculate themselves.                          │
+     └──────────────────────────────────────────────────────────┘ */
+
+  var SVF_CURRENT_SEASON = 2026;   // season shown by default
+  var SVF_WEEKLY_PRIZE   = 25;     // default weekly payout
+  var SVF_TOTAL_WEEKS    = 14;     // regular season length
+
+  // Team names for the CURRENT season. Update these when someone renames.
+  // (Past seasons keep their own names in the "teams" block inside each season.)
+  var SVF_TEAMS = {
+    'Adrian':   'Raider Nation',
+    'Alex':     'The Tortured Dolphins Dept',
+    'Brian':    'GetoffMy Ditka',
+    'Brod':     "We Don't Talk About Geno! No No",
+    'Carlitos': 'Disabled Veteran',
+    'Geo':      'RUGGS DRIVING SCHOOL',
+    'Jonathan': 'Team LIGMA',
+    'Jorge':    'OnlyFins',
+    'Lester':   'BigBlitz',
+    'Nabor':    'Ron Mexico'
+  };
+
+  var SVF_ROSTER = ['Adrian','Alex','Brian','Brod','Carlitos','Geo','Jonathan','Jorge','Lester','Nabor'];
+
+  var SVF_SEASONS = {
+
+    2026: {
+      roster: SVF_ROSTER,
+      weeks: [
+        { week: 1, winner: 'Lester', points: 178.02 }
+        // ← add Week 2 here (remember the comma on the line above)
+      ]
+    },
+
+    2025: {
+      roster: SVF_ROSTER,
+      teams: {
+        'Adrian':'Raider Nation', 'Alex':'Enchanted Tua Meet You', 'Brian':'GetoffMy Ditka',
+        'Brod':'Fields of Pain', 'Carlitos':'Disabled Veteran', 'Geo':'RUGGS DRIVING SCHOOL',
+        'Jonathan':'Team LIGMA', 'Jorge':'OnlyFins', 'Lester':'BigBlitz', 'Nabor':'Judge Jeudy'
+      },
+      weeks: [
+        { week: 1,  winner: 'Jorge',    points: 154.58 },
+        { week: 2,  winner: 'Brian',    points: 163.74 },
+        { week: 3,  winner: 'Geo',      points: 166.82 },
+        { week: 4,  winner: 'Alex',     points: 181.14 },
+        { week: 5,  winner: 'Brod',     points: 174.78 },
+        { week: 6,  winner: 'Nabor',    points: 169.16 },
+        { week: 7,  winner: 'Jonathan', points: 199.26 },
+        { week: 8,  winner: 'Brian',    points: 161.94 },
+        { week: 9,  winner: 'Jonathan', points: 166.32 },
+        { week: 10, winner: 'Nabor',    points: 164.42 },
+        { week: 11, winner: 'Nabor',    points: 153.60 },
+        { week: 12, winner: 'Alex',     points: 174.82 },
+        { week: 13, winner: 'Jonathan', points: 155.02 },
+        { week: 14, winner: 'Adrian',   points: 165.66 }
+      ]
+    },
+
+    2024: {
+      roster: ['Adrian','Alex','Brian','Carlitos','Chris','Geo','Jorge','Julian','Lester','Nabor'],
+      teams: {
+        'Adrian':'Raider Nation', 'Alex':'All Tua Well', 'Brian':'GetoffMy Ditka',
+        'Carlitos':'Disabled Veteran', 'Chris':'The two time', 'Geo':'RUGGS DRIVING SCHOOL',
+        'Jorge':'Hawk Tua', 'Julian':'Team Purple Cobras', 'Lester':'Team Bigblindz',
+        'Nabor':'In Tua We Trust'
+      },
+      weeks: [
+        { week: 1,  winner: 'Carlitos', points: 172.18 },
+        { week: 2,  winner: 'Julian',   points: 163.74 },
+        { week: 3,  winner: 'Brian',    points: 178.58 },
+        { week: 4,  winner: 'Brian',    points: 161.48 },
+        { week: 5,  winner: 'Chris',    points: 190.30 },
+        { week: 6,  winner: 'Carlitos', points: 155.40 },
+        { week: 7,  winner: 'Chris',    points: 182.80 },
+        { week: 8,  winner: 'Nabor',    points: 162.94 },
+        { week: 9,  winner: 'Julian',   points: 169.14 },
+        { week: 10, winner: 'Chris',    points: 166.14 },
+        { week: 11, winner: 'Adrian',   points: 165.68 },
+        { week: 12, winner: 'Alex',     points: 164.10 },
+        { week: 13, winner: 'Nabor',    points: 156.40 },
+        { week: 14, winner: 'Adrian',   points: 168.22 }
+      ]
+    },
+
+    2023: {
+      roster: ['Adrian','Alex','Brian','Carlitos','Chris','Geo','Julian','Lester','Moe','Nabor'],
+      teams: {
+        'Adrian':'Raider Nation', 'Alex':'Tua Lipa', 'Brian':'GetoffMy Ditka',
+        'Carlitos':'NotFrom63rd', 'Chris':'Grimez ;)', 'Geo':'HURTS TO PEE',
+        'Julian':'Team Purple Cobras', 'Lester':'Team Bigblindz', 'Moe':'WHAW',
+        'Nabor':'Team Jaramillo'
+      },
+      weeks: [
+        { week: 1,  winner: 'Carlitos', prize: 10, points: 160.74 },
+        { week: 2,  winner: 'Chris',    prize: 25, points: 167.08 },
+        { week: 3,  winner: 'Moe',      prize: 10, points: 180.18 },
+        { week: 4,  winner: 'Chris',    prize: 10, points: 201.54 },
+        { week: 5,  winner: 'Chris',    prize: 10, points: 159.94 },
+        { week: 6,  winner: 'Chris',    prize: 10, points: 157.12 },
+        { week: 7,  winner: 'Geo',      prize: 25, points: 161.26 },
+        { week: 8,  winner: 'Carlitos', prize: 10, points: 167.28 },
+        { week: 9,  winner: 'Brian',    prize: 10, points: 171.90 },
+        { week: 10, winner: 'Adrian',   prize: 25, points: 212.26 },
+        { week: 11, winner: 'Chris',    prize: 25, points: 146.46 },
+        { week: 12, winner: 'Chris',    prize: 10, points: 176.98 },
+        { week: 13, winner: 'Nabor',    prize: 10, points: 171.06 },
+        { week: 14, winner: 'Brian',    prize: 10, points: 185.22 }
+      ]
+    }
+
+  };
+
+  /* ===== Nothing below here needs editing ===== */
+  (function () {
+    var elSeasons = document.getElementById('sbSeasons');
+    var elSpot    = document.getElementById('sbSpot');
+    var elWeeks   = document.getElementById('sbWeeks');
+    var elWeeksSub= document.getElementById('sbWeeksSub');
+    var elBoard   = document.getElementById('sbBoard');
+    var elBoardSub= document.getElementById('sbBoardSub');
+    var elFoot    = document.getElementById('sbFoot');
+    var elNote    = document.getElementById('sbNote');
+    if (!elSeasons) return;
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+      });
+    }
+    function money(n) { return '$' + Number(n).toLocaleString('en-US'); }
+    function prizeOf(w) { return (w && w.prize != null) ? w.prize : SVF_WEEKLY_PRIZE; }
+    function pts(v) { return Number(v).toFixed(2); }
+    function teamOf(n, s) { return (s && s.teams && s.teams[n]) || SVF_TEAMS[n] || ''; }
+
+    var years = Object.keys(SVF_SEASONS).sort(function (a, b) { return b - a; });
+
+    function weekMap(year) {
+      var m = {};
+      (SVF_SEASONS[year].weeks || []).forEach(function (w) {
+        if (w && w.week) m[w.week] = w;
+      });
+      return m;
+    }
+
+    function standings(year) {
+      var s = SVF_SEASONS[year], m = {};
+      (s.roster || []).forEach(function (n) { m[n] = { name: n, cash: 0, wins: 0 }; });
+      (s.weeks || []).forEach(function (w) {
+        if (!w || !w.winner) return;
+        if (!m[w.winner]) m[w.winner] = { name: w.winner, cash: 0, wins: 0 };
+        m[w.winner].cash += prizeOf(w);
+        m[w.winner].wins += 1;
+      });
+      return Object.keys(m).map(function (k) { return m[k]; }).sort(function (a, b) {
+        return (b.cash - a.cash) || (b.wins - a.wins) || a.name.localeCompare(b.name);
+      });
+    }
+
+    function render(year) {
+      var season  = SVF_SEASONS[year];
+      var total   = season.totalWeeks || SVF_TOTAL_WEEKS;
+      var wmap    = weekMap(year);
+      var played  = (season.weeks || []).filter(function (w) { return w && w.winner; });
+      var table   = standings(year);
+      var isNow   = String(year) === String(SVF_CURRENT_SEASON);
+
+      // --- season buttons ---
+      elSeasons.innerHTML = years.map(function (y) {
+        return '<button class="sb-yr' + (String(y) === String(year) ? ' on' : '') +
+               '" data-year="' + esc(y) + '">' + esc(y) +
+               (String(y) === String(SVF_CURRENT_SEASON) ? '' : '') + '</button>';
+      }).join('');
+
+      // --- spotlight ---
+      var last = played.length ? played[played.length - 1] : null;
+      if (isNow && last) {
+        elSpot.innerHTML =
+          '<div class="sb-spot-medal">🏆</div>' +
+          '<div class="sb-spot-main">' +
+            '<div class="sb-spot-label">Week ' + esc(last.week) + ' Top Scorer</div>' +
+            '<div class="sb-spot-name">' + esc(last.winner) + '</div>' +
+            '<div class="sb-spot-sub">' +
+              (teamOf(last.winner, season) ? esc(teamOf(last.winner, season)) : '') +
+              (teamOf(last.winner, season) && last.points != null ? ' · ' : '') +
+              (last.points != null ? esc(pts(last.points)) + ' pts' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="sb-spot-cash">' + money(prizeOf(last)) + '</div>';
+      } else if (isNow) {
+        elSpot.innerHTML =
+          '<div class="sb-spot-medal">🦈</div>' +
+          '<div class="sb-spot-main">' +
+            '<div class="sb-spot-label">Week 1 Top Scorer</div>' +
+            '<div class="sb-spot-name">Coming soon</div>' +
+            '<div class="sb-spot-sub">High score each week takes the cash.</div>' +
+          '</div>' +
+          '<div class="sb-spot-cash">' + money(SVF_WEEKLY_PRIZE) + '</div>';
+      } else {
+        var top = table[0];
+        elSpot.innerHTML =
+          '<div class="sb-spot-medal">👑</div>' +
+          '<div class="sb-spot-main">' +
+            '<div class="sb-spot-label">' + esc(year) + ' Top Earner</div>' +
+            '<div class="sb-spot-name">' + esc(top ? top.name : '—') + '</div>' +
+            '<div class="sb-spot-sub">' + (top ? esc(top.wins) + (top.wins === 1 ? ' weekly win' : ' weekly wins') : '') + '</div>' +
+          '</div>' +
+          '<div class="sb-spot-cash">' + money(top ? top.cash : 0) + '</div>';
+      }
+
+      // --- week by week ---
+      elWeeksSub.textContent = played.length + ' of ' + total + ' weeks in the books';
+      var rows = '', hidden = '', upcoming = 0;
+      var upcomingTotal = 0;
+      for (var k = 1; k <= total; k++) { if (!(wmap[k] && wmap[k].winner)) upcomingTotal++; }
+      var collapseAfter = 2, willCollapse = upcomingTotal > 4;
+      for (var i = 1; i <= total; i++) {
+        var w = wmap[i];
+        var chunk = '';
+        if (w && w.winner) {
+          var team = teamOf(w.winner, season);
+          chunk =
+            '<div class="sb-week done">' +
+              '<div class="sb-wk">WK ' + i + '</div>' +
+              '<div class="sb-win">' + esc(w.winner) +
+                (team ? '<small>' + esc(team) + '</small>' : '') +
+              '</div>' +
+              (w.points != null ? '<div class="sb-pts">' + esc(pts(w.points)) + ' pts</div>' : '') +
+              '<div class="sb-amt">' + money(prizeOf(w)) + '</div>' +
+            '</div>';
+          rows += chunk;
+        } else {
+          upcoming++;
+          chunk =
+            '<div class="sb-week open">' +
+              '<div class="sb-wk">WK ' + i + '</div>' +
+              '<div class="sb-win">' + (isNow ? 'Up for grabs' : '—') + '</div>' +
+              '<div class="sb-amt">' + money(SVF_WEEKLY_PRIZE) + '</div>' +
+            '</div>';
+          if (willCollapse && upcoming > collapseAfter) { hidden += chunk; } else { rows += chunk; }
+        }
+      }
+      if (hidden) {
+        rows += '<div id="sbRest" style="display:none">' + hidden + '</div>' +
+                '<button id="sbMore" class="sb-more">+ ' + (upcomingTotal - collapseAfter) + ' more weeks</button>';
+      }
+      elWeeks.innerHTML = rows;
+      var more = document.getElementById('sbMore');
+      if (more) {
+        more.addEventListener('click', function () {
+          var rest = document.getElementById('sbRest');
+          var open = rest.style.display !== 'none';
+          rest.style.display = open ? 'none' : 'block';
+          more.textContent = open ? ('+ ' + (upcomingTotal - collapseAfter) + ' more weeks') : '− hide remaining weeks';
+        });
+      }
+
+      // --- money leaderboard ---
+      var paid = played.reduce(function (sum, w) { return sum + prizeOf(w); }, 0);
+      var pot  = 0;
+      for (var j = 1; j <= total; j++) { pot += wmap[j] ? prizeOf(wmap[j]) : SVF_WEEKLY_PRIZE; }
+      var max  = table.length ? table[0].cash : 0;
+
+      elBoardSub.textContent = isNow ? 'Cash won so far this season' : 'Final ' + year + ' payouts';
+      elBoard.innerHTML = table.map(function (p, idx) {
+        var pct  = max > 0 ? Math.round((p.cash / max) * 100) : 0;
+        var rank = 1 + table.filter(function (o) { return o.cash > p.cash; }).length;
+        var lead = p.cash > 0 && p.cash === max;
+        return '<div class="sb-row' + (lead ? ' lead' : '') + (p.cash === 0 ? ' zero' : '') + '">' +
+                 '<div class="sb-bar" style="width:' + pct + '%"></div>' +
+                 '<div class="sb-rank">' + (p.cash > 0 ? rank : '–') + '</div>' +
+                 '<div class="sb-nm">' + esc(p.name) +
+                   (teamOf(p.name, season) ? '<small>' + esc(teamOf(p.name, season)) + '</small>' : '') +
+                 '</div>' +
+                 '<div class="sb-cash">' + money(p.cash) +
+                   (p.wins ? ' <span style="font-family:Nunito,sans-serif; font-size:11px; font-weight:800; color:#5b6b7d;">×' + p.wins + '</span>' : '') +
+                 '</div>' +
+               '</div>';
+      }).join('');
+
+      elFoot.innerHTML =
+        '<span>Paid out</span><span><b>' + money(paid) + '</b> of ' + money(pot) + '</span>';
+      elNote.textContent = season.note || (isNow ? 'High score each week wins ' + money(SVF_WEEKLY_PRIZE) + '.' : '');
+    }
+
+    elSeasons.addEventListener('click', function (e) {
+      var btn = e.target.closest('.sb-yr');
+      if (btn) render(btn.getAttribute('data-year'));
+    });
+
+    render(SVF_SEASONS[SVF_CURRENT_SEASON] ? SVF_CURRENT_SEASON : years[0]);
+  })();
+  </script>
 
 </body>
 </html>

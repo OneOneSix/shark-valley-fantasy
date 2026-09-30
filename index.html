@@ -280,14 +280,8 @@
     .wv-wk:hover { transform:translateY(-2px); box-shadow:0 5px 0 #0B1E3A; }
     .wv-wk.on { background:#FFC53D; }
 
-    /* Superlative tiles */
-    .wv-awards { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-    .wv-award { background:#0B1E3A; border:3px solid #FFC53D; border-radius:16px; padding:11px 12px; box-shadow:0 4px 0 rgba(0,0,0,0.25); }
-    .wv-award.miss { border-color:#E8542F; }
-    .wv-a-label { font-size:9.5px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#7FB6C9; }
-    .wv-a-val { font-family:'Lilita One', sans-serif; font-size:19px; color:#FFC53D; line-height:1.15; margin-top:3px; }
-    .wv-award.miss .wv-a-val { color:#FF7A54; }
-    .wv-a-sub { font-size:11px; font-weight:700; color:#FFFDF5; margin-top:1px; line-height:1.3; }
+    .wv-status { font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#7FB6C9; text-align:center; }
+    .wv-status.err { color:#FFC53D; }
 
     .wv-cols { display:grid; grid-template-columns:1fr; gap:14px; }
     .wv-card { background:#FFFDF5; border:3px solid #0B1E3A; border-radius:22px; padding:16px 14px; box-shadow:0 5px 0 #0B1E3A; }
@@ -328,13 +322,12 @@
     .wv-more:hover { background:#D7EDF2; }
 
     /* FAAB burn-down */
-    .wv-faab { display:flex; align-items:center; gap:9px; padding:6px 2px; }
+    .wv-faab { display:flex; align-items:center; gap:10px; padding:7px 2px; }
     .wv-faab + .wv-faab { border-top:1px solid #eee5d0; }
     .wv-fname { width:72px; font-weight:900; font-size:12.5px; color:#0B1E3A; }
     .wv-ftrack { flex:1; height:15px; background:#ECE6D6; border-radius:999px; overflow:hidden; }
     .wv-ffill { height:100%; background:linear-gradient(90deg,#FFC53D,#E8542F); border-radius:999px; }
-    .wv-fleft { width:62px; text-align:right; font-family:'Lilita One', sans-serif; font-size:14px; color:#0B1E3A; }
-    .wv-fleft small { display:block; font-family:'Nunito', sans-serif; font-size:9.5px; font-weight:800; color:#5b6b7d; letter-spacing:.5px; }
+    .wv-fleft { width:52px; text-align:right; font-family:'Lilita One', sans-serif; font-size:15px; color:#0B1E3A; }
     .wv-broke .wv-fleft { color:#E8542F; }
 
     /* Season ledger */
@@ -350,9 +343,10 @@
     @media (min-width: 860px), (orientation: landscape) and (min-width: 560px) {
       .waivers { max-width:1280px; margin:10px auto 30px; padding:0 20px; }
       .wv-title { font-size:34px; }
-      .wv-awards { grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:20px; }
-      .wv-a-val { font-size:22px; }
-      .wv-cols { grid-template-columns:1.35fr 1fr; gap:24px; align-items:start; }
+      .wv-status { font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#7FB6C9; text-align:center; }
+    .wv-status.err { color:#FFC53D; }
+
+    .wv-cols { grid-template-columns:1.35fr 1fr; gap:24px; align-items:start; }
       .wv-card { padding:20px 18px; }
       .wv-side { display:flex; flex-direction:column; gap:24px; }
     }
@@ -447,8 +441,8 @@
       <div class="wv-head">
         <div class="wv-title">🔨 Waiver Report</div>
         <div class="wv-weeks" id="wvWeeks"></div>
+        <div class="wv-status" id="wvStatus"></div>
       </div>
-      <div class="wv-awards" id="wvAwards"></div>
       <div class="wv-cols">
         <div class="wv-card">
           <div class="wv-c-title">⚔️ Bidding War</div>
@@ -879,31 +873,34 @@
   </script>
 
   <!-- =========================================================
-       WAIVER DATA  —  replaced each Wednesday
+       WAIVER REPORT — pulls live from ESPN, falls back to the
+       saved snapshot below if ESPN is unreachable.
        ========================================================= -->
   <script>
   /* ┌──────────────────────────────────────────────────────────┐
-     │  HOW TO UPDATE AFTER WAIVERS RUN                         │
+     │  THIS UPDATES ITSELF.                                    │
      │                                                          │
-     │  Add a new { week: N, moves: [...] } block at the TOP    │
-     │  of the weeks list below. Each move looks like:          │
+     │  The page reads the waiver results straight from ESPN    │
+     │  every time someone loads it, so Wednesday's report is   │
+     │  there on its own. Nothing to edit each week.            │
      │                                                          │
-     │    { player: 'Name', pos: 'RB', winner: 'Adrian',        │
-     │      bid: 31, drop: 'Player Dropped',                    │
-     │      losers: [{ who: 'Brian', bid: 28 }] }               │
+     │  The weeks list below is only a backup, shown if ESPN    │
+     │  is down or the league is switched to private. It also   │
+     │  shows instantly while the live data loads.              │
      │                                                          │
-     │  - losers: []  means nobody else bid (uncontested)       │
-     │  - voided: true on a loser = their bid failed for their  │
-     │    own reason (the guy they were dropping was gone)      │
-     │                                                          │
-     │  FAAB spent, the awards and the season ledger are all    │
-     │  calculated from this list. Nothing else to update.      │
+     │  If the league ID ever changes, update SVF_LEAGUE.       │
      └──────────────────────────────────────────────────────────┘ */
 
+  var SVF_LEAGUE = { id: '1401594154', season: 2026, live: true };
   var SVF_FAAB_BUDGET = 100;
 
+  // ESPN team id -> the name we use in the league. Hard-coded on purpose:
+  // two managers are both "Brian" on ESPN, so first names can't be trusted.
+  var SVF_TEAM_IDS = { 1:'Adrian', 3:'Jorge', 5:'Geo', 6:'Alex', 7:'Nabor',
+                       8:'Lester', 10:'Brian', 11:'Carlitos', 12:'Brod', 13:'Jonathan' };
+
   var SVF_WAIVERS = { weeks: [
-    { week: 4, moves: [
+    { week: 4, date: 1790754924782, moves: [
       { player: 'Braelon Allen', pos: 'RB', winner: 'Adrian', bid: 31, drop: 'Chris Godwin Jr.', losers: [{ who: 'Brian', bid: 28 }, { who: 'Alex', bid: 23 }] },
       { player: 'Sam Darnold', pos: 'QB', winner: 'Jonathan', bid: 20, drop: 'Kyle Pitts Sr.', losers: [] },
       { player: 'Kenyon Sadiq', pos: 'TE', winner: 'Alex', bid: 9, drop: 'Dalton Schultz', losers: [] },
@@ -914,34 +911,30 @@
       { player: 'Kyler Murray', pos: 'QB', winner: 'Alex', bid: 1, drop: 'Jordan Love', losers: [] },
       { player: 'Bears D/ST', pos: 'D/ST', winner: 'Lester', bid: 1, drop: 'Panthers D/ST', losers: [] }
     ] },
-    { week: 3, moves: [
+    { week: 3, date: 1790149886286, moves: [
       { player: 'Jonah Coleman', pos: 'RB', winner: 'Alex', bid: 28, drop: 'Jayden Reed', losers: [] },
       { player: 'Jared Goff', pos: 'QB', winner: 'Adrian', bid: 17, drop: 'Jayden Daniels', losers: [] },
       { player: 'Denzel Boston', pos: 'WR', winner: 'Adrian', bid: 13, drop: 'Quentin Johnston', losers: [{ who: 'Carlitos', bid: 3 }, { who: 'Brian', bid: 3 }] },
       { player: 'Adonai Mitchell', pos: 'WR', winner: 'Carlitos', bid: 5, drop: 'Baker Mayfield', losers: [] },
-      { player: 'Tyler Shough', pos: 'QB', winner: 'Brian', bid: 4, drop: 'Caleb Douglas', losers: [{ who: 'Adrian', bid: 13, voided: true }, { who: 'Jonathan', bid: 1 }] },
-      { player: 'Chris Godwin Jr.', pos: 'WR', winner: 'Adrian', bid: 3, drop: 'Wan\'Dale Robinson', losers: [] },
-      { player: 'Quentin Johnston', pos: 'WR', winner: 'Brian', bid: 1, drop: 'Jacory Croskey-Merritt', losers: [] },
-      { player: 'RJ Harvey', pos: 'RB', winner: 'Alex', bid: 1, drop: 'Chris Godwin Jr.', losers: [] }
+      { player: 'Tyler Shough', pos: 'QB', winner: 'Brian', bid: 4, drop: 'Caleb Douglas', losers: [{ who: 'Adrian', bid: 13, voided: true }, { who: 'Jonathan', bid: 1 }] }
     ] },
-    { week: 2, moves: [
+    { week: 2, date: 1789542487091, moves: [
       { player: 'Kaelon Black', pos: 'RB', winner: 'Brian', bid: 10, drop: 'Woody Marks', losers: [] },
       { player: 'Devaughn Vele', pos: 'WR', winner: 'Brod', bid: 5, drop: 'Ja\'Kobi Lane', losers: [{ who: 'Brian', bid: 5 }] },
       { player: 'Buccaneers D/ST', pos: 'D/ST', winner: 'Adrian', bid: 4, drop: 'Jaguars D/ST', losers: [] },
       { player: 'Caleb Douglas', pos: 'WR', winner: 'Brian', bid: 3, drop: 'De\'Zhaun Stribling', losers: [] },
       { player: 'Evan McPherson', pos: 'K', winner: 'Adrian', bid: 1, drop: null, losers: [] },
-      { player: '49ers D/ST', pos: 'D/ST', winner: 'Jonathan', bid: 1, drop: null, losers: [] },
-      { player: 'Patriots D/ST', pos: 'D/ST', winner: 'Carlitos', bid: 1, drop: 'Bengals D/ST', losers: [] }
+      { player: '49ers D/ST', pos: 'D/ST', winner: 'Jonathan', bid: 1, drop: null, losers: [] }
     ] },
-    { week: 1, moves: [
+    { week: 1, date: 1788765613520, moves: [
       { player: 'Tank Bigsby', pos: 'RB', winner: 'Alex', bid: 0, drop: null, losers: [] }
     ] }
-  ] };
+  ], spent: { Adrian:71, Alex:39, Brian:23, Jonathan:21, Carlitos:11, Brod:10, Lester:1, Jorge:0, Geo:0, Nabor:0 } };
 
   /* ===== Nothing below here needs editing ===== */
   (function () {
     var elWeeks  = document.getElementById('wvWeeks');
-    var elAwards = document.getElementById('wvAwards');
+    var elStatus = document.getElementById('wvStatus');
     var elBoard  = document.getElementById('wvBoard');
     var elSub    = document.getElementById('wvBoardSub');
     var elFaab   = document.getElementById('wvFaab');
@@ -949,9 +942,12 @@
     var elSec    = document.getElementById('wvSection');
     if (!elSec) return;
 
-    var weeks = (SVF_WAIVERS.weeks || []).slice().sort(function (a, b) { return b.week - a.week; });
-    // Nothing to report? Hide the whole section rather than leaving a dead panel.
-    if (!weeks.length) { elSec.style.display = 'none'; return; }
+    var state = {
+      weeks: (SVF_WAIVERS.weeks || []).slice(),
+      spent: Object.assign({}, SVF_WAIVERS.spent || {}),
+      live: false
+    };
+    var viewing = null;
 
     function esc(s) {
       return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -959,107 +955,25 @@
       });
     }
     function money(n) { return '$' + Number(n).toLocaleString('en-US'); }
-    function allMoves() { return weeks.reduce(function (a, w) { return a.concat(w.moves || []); }, []); }
 
-    // ---- season-wide figures (same for every week you look at) ----
-    var spent = {}, claims = {};
-    allMoves().forEach(function (m) {
-      spent[m.winner] = (spent[m.winner] || 0) + (m.bid || 0);
-      claims[m.winner] = (claims[m.winner] || 0) + 1;
-    });
-    if (typeof SVF_ROSTER !== 'undefined') {
-      SVF_ROSTER.forEach(function (n) { if (!(n in spent)) spent[n] = 0; });
-    }
+    /* ---------------- rendering ---------------- */
 
-    function renderFaab() {
-      var names = Object.keys(spent).sort(function (a, b) { return spent[b] - spent[a] || a.localeCompare(b); });
-      elFaab.innerHTML = names.map(function (n) {
-        var left = SVF_FAAB_BUDGET - spent[n];
-        var pct  = Math.max(0, Math.min(100, Math.round((spent[n] / SVF_FAAB_BUDGET) * 100)));
-        return '<div class="wv-faab' + (left <= 25 ? ' wv-broke' : '') + '">' +
-                 '<div class="wv-fname">' + esc(n) + '</div>' +
-                 '<div class="wv-ftrack"><div class="wv-ffill" style="width:' + pct + '%"></div></div>' +
-                 '<div class="wv-fleft">' + money(left) + '<small>' + money(spent[n]) + ' spent</small></div>' +
-               '</div>';
+    function render() {
+      var weeks = state.weeks.slice().sort(function (a, b) { return b.week - a.week; });
+      if (!weeks.length) { elSec.style.display = 'none'; return; }
+      elSec.style.display = '';
+      if (viewing === null || !weeks.some(function (w) { return w.week === viewing; })) viewing = weeks[0].week;
+
+      elWeeks.innerHTML = weeks.map(function (x) {
+        return '<button class="wv-wk' + (x.week === viewing ? ' on' : '') + '" data-wk="' + x.week + '">Wk ' + x.week + '</button>';
       }).join('');
-    }
 
-    function renderLedger() {
-      var ms = allMoves();
-      var wkOf = {};
-      weeks.forEach(function (w) { (w.moves || []).forEach(function (m) { wkOf[m.player + '|' + m.winner] = w.week; }); });
-
-      var big = ms.slice().sort(function (a, b) { return b.bid - a.bid; })[0];
-      var fought = ms.slice().sort(function (a, b) {
-        return (b.losers || []).length - (a.losers || []).length || b.bid - a.bid;
-      })[0];
-      var total = ms.reduce(function (a, m) { return a + (m.bid || 0); }, 0);
-      var busiest = Object.keys(claims).sort(function (a, b) { return claims[b] - claims[a]; })[0];
-      var pool = SVF_FAAB_BUDGET * Object.keys(spent).length;
-
-      var rows = [
-        ['Biggest buy', esc(big.player) + ' ' + money(big.bid), esc(big.winner) + ' · Week ' + wkOf[big.player + '|' + big.winner]],
-        ['Most fought over', esc(fought.player), ((fought.losers || []).length + 1) + ' managers bid · Week ' + wkOf[fought.player + '|' + fought.winner]],
-        ['Most claims won', esc(busiest), claims[busiest] + ' players'],
-        ['League FAAB spent', money(total), 'of ' + money(pool)]
-      ];
-      elLedger.innerHTML = rows.map(function (r) {
-        return '<div class="wv-led"><div class="wv-led-k">' + r[0] + '</div>' +
-               '<div class="wv-led-v">' + r[1] + '<small>' + r[2] + '</small></div></div>';
-      }).join('');
-    }
-
-    // ---- per-week ----
-    function renderWeek(wk) {
-      var w = weeks.filter(function (x) { return String(x.week) === String(wk); })[0] || weeks[0];
+      var w = weeks.filter(function (x) { return x.week === viewing; })[0];
       var moves = (w.moves || []).slice().sort(function (a, b) { return b.bid - a.bid; });
       var contested = moves.filter(function (m) { return (m.losers || []).length; });
 
-      elWeeks.innerHTML = weeks.map(function (x) {
-        return '<button class="wv-wk' + (x.week === w.week ? ' on' : '') + '" data-wk="' + x.week + '">Wk ' + x.week + '</button>';
-      }).join('');
-
-      // --- awards ---
-      var cards = [];
-      var top = moves[0];
-      if (top) cards.push(['Top Dollar', money(top.bid), esc(top.winner) + ' · ' + esc(top.player), false]);
-
-      var pool = contested.length ? contested : moves.filter(function (m) { return m.bid > 0; });
-      var cheap = pool.slice().sort(function (a, b) { return a.bid - b.bid; })[0];
-      if (cheap) cards.push(['Bargain Bin', money(cheap.bid), esc(cheap.winner) + ' · ' + esc(cheap.player), false]);
-
-      var close = null;
-      contested.forEach(function (m) {
-        var real = (m.losers || []).filter(function (l) { return !l.voided; });
-        if (!real.length) return;
-        var runner = real.slice().sort(function (a, b) { return b.bid - a.bid; })[0];
-        var gap = m.bid - runner.bid;
-        if (close === null || gap < close.gap) close = { gap: gap, m: m, runner: runner };
-      });
-      if (close) {
-        cards.push(['Photo Finish', close.gap === 0 ? 'Tied' : money(close.gap),
-          esc(close.m.winner) + ' over ' + esc(close.runner.who) + ' · ' + esc(close.m.player), false]);
-      }
-
-      var miss = null;
-      moves.forEach(function (m) {
-        (m.losers || []).forEach(function (l) { if (!miss || l.bid > miss.bid) miss = { bid: l.bid, who: l.who, player: m.player, voided: l.voided }; });
-      });
-      if (miss) {
-        cards.push(['Swing & Miss', money(miss.bid),
-          esc(miss.who) + ' · ' + esc(miss.player) + (miss.voided ? ' (voided)' : ''), true]);
-      }
-      elAwards.innerHTML = cards.map(function (c) {
-        return '<div class="wv-award' + (c[3] ? ' miss' : '') + '">' +
-                 '<div class="wv-a-label">' + c[0] + '</div>' +
-                 '<div class="wv-a-val">' + c[1] + '</div>' +
-                 '<div class="wv-a-sub">' + c[2] + '</div>' +
-               '</div>';
-      }).join('');
-
-      // --- bidding board: contested first, quiet ones behind the button ---
-      elSub.textContent = moves.length + (moves.length === 1 ? ' claim · ' : ' claims · ') +
-                          (contested.length ? contested.length + ' contested' : 'none contested');
+      elSub.textContent = moves.length + (moves.length === 1 ? ' claim' : ' claims') +
+        (contested.length ? ' · ' + contested.length + ' contested' : '');
 
       function moveHtml(m) {
         var lose = (m.losers || []).slice().sort(function (a, b) { return b.bid - a.bid; }).map(function (l) {
@@ -1079,36 +993,214 @@
       }
 
       var quiet = moves.filter(function (m) { return !(m.losers || []).length; });
-      var shownQuiet = quiet.slice(0, contested.length ? 2 : 3);
-      var restQuiet  = quiet.slice(shownQuiet.length);
+      var shown = quiet.slice(0, contested.length ? 2 : 3);
+      var rest  = quiet.slice(shown.length);
       elBoard.innerHTML =
+        (moves.length ? '' : '<div class="wv-quiet">No claims processed this week.</div>') +
         contested.map(moveHtml).join('') +
-        shownQuiet.map(moveHtml).join('') +
-        (restQuiet.length
-          ? '<div class="wv-hide" id="wvRest">' + restQuiet.map(moveHtml).join('') + '</div>' +
+        shown.map(moveHtml).join('') +
+        (rest.length
+          ? '<div class="wv-hide" id="wvRest">' + rest.map(moveHtml).join('') + '</div>' +
             '<button class="wv-more" id="wvMore">See more</button>'
-          : '') +
-        (moves.length ? '' : '<div class="wv-quiet">No claims processed this week.</div>');
+          : '');
 
       var btn = document.getElementById('wvMore');
-      if (btn) {
-        btn.addEventListener('click', function () {
-          var box = document.getElementById('wvRest');
-          var open = box.style.display === 'block';
-          box.style.display = open ? 'none' : 'block';
-          btn.textContent = open ? 'See more' : 'See less';
-        });
-      }
+      if (btn) btn.addEventListener('click', function () {
+        var box = document.getElementById('wvRest');
+        var open = box.style.display === 'block';
+        box.style.display = open ? 'none' : 'block';
+        btn.textContent = open ? 'See more' : 'See less';
+      });
+
+      renderFaab();
+      renderLedger();
+    }
+
+    function renderFaab() {
+      var spent = state.spent;
+      // Most money left at the top, skint at the bottom.
+      var names = Object.keys(spent).sort(function (a, b) {
+        return (SVF_FAAB_BUDGET - spent[b]) - (SVF_FAAB_BUDGET - spent[a]) || a.localeCompare(b);
+      });
+      elFaab.innerHTML = names.map(function (n) {
+        var left = SVF_FAAB_BUDGET - spent[n];
+        // Bar shows what's LEFT, so a full bar means a full wallet.
+        var pct  = Math.max(0, Math.min(100, Math.round((left / SVF_FAAB_BUDGET) * 100)));
+        return '<div class="wv-faab' + (left <= 25 ? ' wv-broke' : '') + '">' +
+                 '<div class="wv-fname">' + esc(n) + '</div>' +
+                 '<div class="wv-ftrack"><div class="wv-ffill" style="width:' + pct + '%"></div></div>' +
+                 '<div class="wv-fleft">' + money(left) + '</div>' +
+               '</div>';
+      }).join('');
+    }
+
+    function renderLedger() {
+      var ms = [], wkOf = {};
+      state.weeks.forEach(function (w) {
+        (w.moves || []).forEach(function (m) { ms.push(m); wkOf[m.player + '|' + m.winner] = w.week; });
+      });
+      if (!ms.length) { elLedger.innerHTML = ''; return; }
+      var claims = {};
+      ms.forEach(function (m) { claims[m.winner] = (claims[m.winner] || 0) + 1; });
+
+      var big = ms.slice().sort(function (a, b) { return b.bid - a.bid; })[0];
+      var fought = ms.slice().sort(function (a, b) {
+        return (b.losers || []).length - (a.losers || []).length || b.bid - a.bid;
+      })[0];
+      var busiest = Object.keys(claims).sort(function (a, b) { return claims[b] - claims[a]; })[0];
+      var total = Object.keys(state.spent).reduce(function (a, k) { return a + state.spent[k]; }, 0);
+      var pool  = SVF_FAAB_BUDGET * Object.keys(state.spent).length;
+
+      var rows = [
+        ['Biggest buy', esc(big.player) + ' ' + money(big.bid), esc(big.winner) + ' · Week ' + wkOf[big.player + '|' + big.winner]],
+        ['Most fought over', esc(fought.player), ((fought.losers || []).length + 1) + ' managers bid · Week ' + wkOf[fought.player + '|' + fought.winner]],
+        ['Most claims won', esc(busiest), claims[busiest] + ' players'],
+        ['League FAAB spent', money(total), 'of ' + money(pool)]
+      ];
+      elLedger.innerHTML = rows.map(function (r) {
+        return '<div class="wv-led"><div class="wv-led-k">' + r[0] + '</div>' +
+               '<div class="wv-led-v">' + r[1] + '<small>' + r[2] + '</small></div></div>';
+      }).join('');
     }
 
     elWeeks.addEventListener('click', function (e) {
       var b = e.target.closest('.wv-wk');
-      if (b) renderWeek(b.getAttribute('data-wk'));
+      if (b) { viewing = Number(b.getAttribute('data-wk')); render(); }
     });
 
-    renderFaab();
-    renderLedger();
-    renderWeek(weeks[0].week);
+    /* ---------------- live pull from ESPN ---------------- */
+
+    var API = 'https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/' +
+              SVF_LEAGUE.season + '/segments/0/leagues/' + SVF_LEAGUE.id;
+    var POS = { 1:'QB', 2:'RB', 3:'WR', 4:'TE', 5:'K', 16:'D/ST' };
+
+    function get(url, headers) {
+      var ctl = ('AbortController' in window) ? new AbortController() : null;
+      if (ctl) setTimeout(function () { ctl.abort(); }, 8000);
+      return fetch(url, { headers: headers || {}, signal: ctl ? ctl.signal : undefined })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    }
+
+    function pullLive() {
+      return get(API + '?view=mTeam').then(function (meta) {
+        var sp = meta.scoringPeriodId || 1;
+        var spent = {};
+        (meta.teams || []).forEach(function (t) {
+          var n = SVF_TEAM_IDS[t.id];
+          if (n) spent[n] = (t.transactionCounter || {}).acquisitionBudgetSpent || 0;
+        });
+
+        // Only the current and previous scoring period — that covers the
+        // latest Wednesday run without hammering ESPN on every page load.
+        var want = [];
+        for (var i = Math.max(1, sp - 1); i <= sp; i++) want.push(i);
+        return Promise.all(want.map(function (i) {
+          return get(API + '?view=mTransactions2&scoringPeriodId=' + i).catch(function () { return {}; });
+        })).then(function (parts) {
+          var seen = {}, tx = [];
+          parts.forEach(function (j) {
+            (j.transactions || []).forEach(function (t) { if (!seen[t.id]) { seen[t.id] = 1; tx.push(t); } });
+          });
+          tx = tx.filter(function (t) { return t.type === 'WAIVER' && t.status !== 'CANCELED'; });
+          if (!tx.length) return { spent: spent, weeks: [] };
+
+          var ids = {};
+          tx.forEach(function (t) { (t.items || []).forEach(function (i) { ids[i.playerId] = 1; }); });
+          return get(API + '?view=kona_player_info', {
+            'x-fantasy-filter': JSON.stringify({ players: { filterIds: { value: Object.keys(ids).map(Number) } } })
+          }).catch(function () { return {}; }).then(function (pj) {
+            var P = {};
+            (pj.players || []).forEach(function (p) {
+              P[p.id] = { n: (p.player && p.player.fullName) || ('#' + p.id),
+                          pos: POS[p.player && p.player.defaultPositionId] || '' };
+            });
+
+            var byWeek = {};
+            tx.forEach(function (t) {
+              var add = (t.items || []).filter(function (i) { return i.type === 'ADD'; })[0];
+              if (!add) return;
+              var drop = (t.items || []).filter(function (i) { return i.type === 'DROP'; })[0];
+              var wk = t.scoringPeriodId;
+              byWeek[wk] = byWeek[wk] || { week: wk, date: 0, days: {}, bids: {} };
+              // Tally claims per calendar day so we can label the week with the
+              // main run (Wednesday), not a straggler claim later in the week.
+              if (t.processDate) {
+                var key = new Date(t.processDate).toDateString();
+                byWeek[wk].days[key] = byWeek[wk].days[key] || { n: 0, ms: t.processDate };
+                byWeek[wk].days[key].n++;
+                if (t.processDate < byWeek[wk].days[key].ms) byWeek[wk].days[key].ms = t.processDate;
+              }
+              (byWeek[wk].bids[add.playerId] = byWeek[wk].bids[add.playerId] || []).push({
+                who: SVF_TEAM_IDS[t.teamId] || ('Team ' + t.teamId),
+                bid: t.bidAmount || 0,
+                status: t.status,
+                day: t.processDate ? new Date(t.processDate).toDateString() : '',
+                drop: drop && P[drop.playerId] ? P[drop.playerId].n : null,
+                info: P[add.playerId] || { n: '#' + add.playerId, pos: '' }
+              });
+            });
+
+            var weeks = Object.keys(byWeek).map(function (k) {
+              var W = byWeek[k], moves = [];
+
+              // The report is the Wednesday run. Claims that trickle in later
+              // in the week are ordinary pickups, not part of the offers report,
+              // so they're left out. If a week has no Wednesday run at all
+              // (week 1 processed on a Monday), fall back to its busiest day.
+              var wed = null, busiest = null;
+              Object.keys(W.days).forEach(function (key) {
+                var d = W.days[key];
+                if (!busiest || d.n > busiest.n || (d.n === busiest.n && d.ms < busiest.ms)) busiest = d;
+                if (new Date(d.ms).getDay() === 3) {
+                  if (!wed || d.n > wed.n || (d.n === wed.n && d.ms < wed.ms)) wed = d;
+                }
+              });
+              var run = wed || busiest;
+              var runDay = run ? new Date(run.ms).toDateString() : null;
+
+              Object.keys(W.bids).forEach(function (pid) {
+                var bids = W.bids[pid]
+                  .filter(function (b) { return !runDay || b.day === runDay; })
+                  .sort(function (a, b) { return b.bid - a.bid; });
+                var win = bids.filter(function (b) { return b.status === 'EXECUTED'; })[0];
+                if (!win) return;
+                moves.push({
+                  player: win.info.n, pos: win.info.pos, winner: win.who, bid: win.bid, drop: win.drop,
+                  losers: bids.filter(function (b) { return b !== win; }).map(function (b) {
+                    return { who: b.who, bid: b.bid, voided: b.status === 'FAILED_PLAYERALREADYDROPPED' };
+                  })
+                });
+              });
+              return { week: W.week, date: run ? run.ms : 0, moves: moves };
+            }).filter(function (w) { return w.moves.length; });
+
+            return { spent: spent, weeks: weeks };
+          });
+        });
+      });
+    }
+
+    if (SVF_LEAGUE.live && window.fetch && window.Promise) {
+      elStatus.textContent = 'Checking ESPN…';
+      pullLive().then(function (live) {
+        // live weeks replace saved ones of the same number; older saved weeks stay
+        var merged = {};
+        state.weeks.forEach(function (w) { merged[w.week] = w; });
+        (live.weeks || []).forEach(function (w) { merged[w.week] = w; });
+        state.weeks = Object.keys(merged).map(function (k) { return merged[k]; });
+        if (Object.keys(live.spent || {}).length) state.spent = live.spent;
+        state.live = true;
+        elStatus.textContent = 'Live from ESPN';
+        render();
+      }).catch(function () {
+        elStatus.className = 'wv-status err';
+        elStatus.textContent = 'ESPN unreachable · showing last saved report';
+      });
+    } else {
+      elStatus.textContent = '';
+    }
+
+    render();
   })();
   </script>
 

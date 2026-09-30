@@ -285,7 +285,8 @@
 
     .wv-cols { display:grid; grid-template-columns:1fr; gap:14px; }
     .wv-card { background:#FFFDF5; border:3px solid #0B1E3A; border-radius:22px; padding:16px 14px; box-shadow:0 5px 0 #0B1E3A; }
-    .wv-card + .wv-card { margin-top:0; }
+    /* The right-hand stack needs the same gap as everything else, at every width. */
+    .wv-side { display:flex; flex-direction:column; gap:14px; }
     .wv-c-title { font-family:'Lilita One', sans-serif; font-size:20px; color:#E8542F; text-transform:uppercase; text-align:center; }
     .wv-c-sub { text-align:center; font-size:11.5px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:#0B6E8F; margin-top:2px; margin-bottom:12px; }
 
@@ -348,7 +349,7 @@
 
     .wv-cols { grid-template-columns:1.35fr 1fr; gap:24px; align-items:start; }
       .wv-card { padding:20px 18px; }
-      .wv-side { display:flex; flex-direction:column; gap:24px; }
+      .wv-side { gap:24px; }
     }
   </style>
 </head>
